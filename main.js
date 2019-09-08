@@ -1,10 +1,11 @@
 const koa = require('koa');
-const fs = require('fs');
 const http = require('http');
 const cors = require('koa2-cors');
-const Router = require('koa-router');
 const path = require('path');
-
+const devices = require('./devices.js');
+const config = require('./config.js');
+const { Pool } = require('pg');
+const port = 8080;
 const root = path.resolve('../electrobase-Frontend');
 const opts = {};
 const application = new koa();
@@ -16,34 +17,21 @@ function createServer(application, port) {
         const server = http.createServer(application.callback());
         server.listen(port, (err) => {
             if (err != null) return reject(err);
-            return resolve();
+            return resolve(server);
         });
     });
 }
 
-//addController(application);
-createServer(application, 8080);
-/*
-function addController(application) {
-    const router = new Router();
-
-    router.get('/media', async (ctx) => {
-        const furl = ctx.originalUrl;
-        const params = furl.split('?');
-        const fp = params[1];
-        if (fp == null) {
-            cts.status = 404;
-            ctx.body = 'not found';
-            return;
-        }
-        const fname =  decodeURIComponent(fp);
-        ctx.body = fs.createReadStream(fname);
+async function createPool() {
+    const pool = new Pool(config.pool);
+    pool.on('error', (err) => {
+        console.error('Unexpected error on idle client', err);
     });
+    return pool;
+}
 
-    router.get('/test', async (ctx) => {
-        ctx.body = 'test completed';
-        ctx.status = 200;
-    });
-
-    application.use(router.routes());
-}*/
+devices.addController(application, '/api/devices');
+createServer(application, port).then(async () => {
+    application.pool = await createPool();
+    console.log(`Server listening on port ${port}`);
+});
