@@ -1,0 +1,26 @@
+{
+  "name": "electrobase-back",
+  "version": "1.0.0",
+  "description": "Backend for eloctrobase(my first PET project)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Frimlis/electrobase-back.git"
+  },
+  "author": "Misha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Frimlis/electrobase-back/issues"
+  },
+  "homepage": "https://github.com/Frimlis/electrobase-back#readme",
+  "dependencies": {
+    "koa": "^2.8.1",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
+    "pg": "^7.12.1"
+  }
+}
